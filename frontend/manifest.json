@@ -1,0 +1,43 @@
+{
+  "name": "TNPSC Current Affairs AI Platform",
+  "short_name": "TNPSC Quiz",
+  "description": "AI-powered quiz platform for TNPSC current affairs preparation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3498db",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "News Feed",
+      "short_name": "News",
+      "description": "View latest current affairs",
+      "url": "/news",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Generate Quiz",
+      "short_name": "Quiz",
+      "description": "Create AI-powered quiz",
+      "url": "/quiz",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
