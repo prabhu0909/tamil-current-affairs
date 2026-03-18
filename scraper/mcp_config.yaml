@@ -1,0 +1,97 @@
+# MCP Configuration for Tamil Nadu News Gathering
+version: "1.0"
+
+# Enabled MCP tools for news gathering
+tools:
+  - name: "web_search"
+    enabled: true
+    description: "Google-powered web search for Tamil Nadu news"
+    params:
+      domains: ["dinakaran.com", "dinathandi.net", "thindakaran.com", "maalaimalar.com", "vikatan.com", "aanandavikatan.com", "kumudam.com", "kalaimalar.com"]
+      language: "ta"
+      max_results: 50
+
+  - name: "content_extractor"
+    enabled: true
+    description: "Advanced content extraction with AI filtering"
+    params:
+      min_content_length: 100
+      extract_images: true
+      detect_language: true
+
+  - name: "news_filter"
+    enabled: true
+    description: "Filter for Tamil Nadu specific news and current affairs"
+    params:
+      keywords: ["தமிழ்நாடு", "தமிழ்நாட்டில்", "சென்னை", "மதுரை", "கோவை", "திருச்சி", "திருநெல்வேலி", "தூத்துக்குடி"]
+      exclude: ["இந்தியா", "உலகம்", "விளையாட்டு", "சினிமா", "பொழுதுபோக்கு"]
+      max_age_days: 7
+
+  - name: "ai_summarizer"
+    enabled: true
+    description: "Multi-model AI summary generation (BERT + GPT)"
+    params:
+      models: ["bert-tamil", "gpt-4o-mini"]
+      max_summary_length: 150
+      language: "ta"
+
+  - name: "sentiment_analyzer"
+    enabled: true
+    description: "Analyze news sentiment and category"
+    params:
+      categories: ["politics", "education", "health", "economy", "law", "governance", "environment", "sports"]
+
+# Data pipelines configuration
+pipelines:
+  - name: "daily_tn_news"
+    schedule: "0 6 * * * IST"  # 6 AM IST daily
+    sources:
+      - "dinakaran"
+      - "dinathandi"
+      - "vikatan_news"
+      - "kumudam_insider"
+      - "thindakaran"
+    processing:
+      - "web_search"
+      - "content_extractor"
+      - "news_filter"
+      - "ai_summarizer"
+
+# Database configuration (inherited from main config)
+database:
+  deduplication: true
+  last_update_tracking: true
+  max_retention_days: 30
+
+# Export configurations
+exports:
+  - format: "json"
+    path: "/app/data/daily_news.json"
+    schedule: "hourly"
+  - format: "html"
+    path: "/app/static/news.html"
+    schedule: "daily"
+  - format: "xml"
+    path: "/app/data/news_rss.xml"
+    schedule: "hourly"
+
+# Monitoring and logging
+monitoring:
+  enable_metrics: true
+  log_level: "INFO"
+  health_check_interval: 300
+
+  alerts:
+    - name: "scraper_failures"
+      threshold: 5
+      window: "1h"
+    - name: "empty_results"
+      threshold: 10
+      action: "email_admin"
+
+# Error handling
+error_handling:
+  retry_attempts: 3
+  retry_delay: 60
+  circuit_breaker_threshold: 10
+  fallback_content: true
